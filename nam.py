@@ -112,53 +112,94 @@
 
 #----------------------------------------------------------------
 
-def debug(func):
+# def debug(func):
     
-    def wrapped(*args, **kwargs):
+#     def wrapped(*args, **kwargs):
         
-        print('**********')
+#         print('**********')
 
-        if args:
+#         if args:
             
-            reform_args = ','.join(str(i) for i in args)
+#             reform_args = ','.join(str(i) for i in args)
             
-            print(f'Positional arguments: {reform_args}')
-        else:
-            print('There are no positional arguments')
-            
-            
-        if kwargs:
-            
-            reform_kwargs = ','.join(f'{str(key)}={str(value)}' for key, value in kwargs.items())
-            
-            print(f'Keyword arguments: {reform_kwargs}')
-        else:
-            print('There are no keyword arguments')
+#             print(f'Positional arguments: {reform_args}')
+#         else:
+#             print('There are no positional arguments')
             
             
-        try:     
+#         if kwargs:
             
-            print(f'Result: {func(*args, **kwargs)}')
+#             reform_kwargs = ','.join(f'{str(key)}={str(value)}' for key, value in kwargs.items())
+            
+#             print(f'Keyword arguments: {reform_kwargs}')
+#         else:
+#             print('There are no keyword arguments')
+            
+            
+#         try:     
+            
+#             print(f'Result: {func(*args, **kwargs)}')
         
-        except TypeError:
+#         except TypeError:
             
-            print(f'Result: The input arguments must be numeric')
+#             print(f'Result: The input arguments must be numeric')
         
-    return wrapped    
+#     return wrapped    
 
 
 
-@debug
-def sum(a, b):
-    """Return the sum of two numbers."""
-    return a + b
+# @debug
+# def sum(a, b):
+#     """Return the sum of two numbers."""
+#     return a + b
 
 
-sum(1, 2)
-sum(a=1, b=2)
-sum(1, "a")
+# sum(1, 2)
+# sum(a=1, b=2)
+# sum(1, "a")
 
 # sum(1, 2)
 # sum(1, "2")
 # sum(a=1, b="a")
 # sum(a=1, b=3.4)
+
+
+
+"""Task 3"""
+
+# {<function sum at 0x7fcd34ced840>: {(1, 2): 3,(3, 2): 5}} 
+# cache_dict[func][args] = func(*args)
+
+def cache(func):
+    
+    cache_dict = {}
+    
+    def wrapped(*args):
+        
+        if func not in cache_dict:
+            cache_dict[func] = {}
+            
+        if args in cache_dict[func]:
+            print("Using the cache")
+            return cache_dict[func][args]
+        else:
+            result = func(*args)
+            cache_dict[func][args] = result
+            print("Calculating")
+            return result
+        
+    
+    return wrapped
+
+
+
+@cache
+def sum(a, b):
+    """Return the sum of two numbers."""
+    return a + b
+
+print(sum(1, 2))
+print(sum(1, 2))
+print(sum(3, 2))
+print(sum(3, 2))
+print(sum(2, 1))
